@@ -1,4 +1,5 @@
 [project]
+requires-python = ">=3.11.2"
 name = "fastapi-complete-course"
 version = "0.0.1"
 description = "Ein FastAPI-Kursprojekt"
@@ -8,8 +9,13 @@ authors = [
     { name = "David Holl", email = "dacovi@tuta.io" },
 ]
 readme = "README.md"
-requires-python = "3.11.2"
 
 [project.urls]
 course = "https://www.udemy.com/course/fastapi-the-complete-course/"
 course_repo = "https://github.com/codingwithroby/fastapi-the-complete-course/"
+
+[tool.mypy]
+warn_return_any = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+files = ["./**"]
