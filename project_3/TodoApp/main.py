@@ -1,4 +1,3 @@
-from curses.ascii import HT
 from typing import Annotated, Generator
 from fastapi import Depends, FastAPI, HTTPException, Path
 from project_3.TodoApp import schemas
