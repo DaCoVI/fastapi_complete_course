@@ -16,7 +16,7 @@ This repository serves as a hands-on learning project for FastAPI, including pra
 
 ### Project 2
 
-- Classes, Handling errors
+- Pydantic and Handling errors
 
 ### Project 3
 
