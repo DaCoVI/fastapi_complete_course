@@ -1,14 +1,15 @@
+from typing import Annotated, Generator
+from fastapi import Depends
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, Session
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./project_3/todos.db"
+DATABASE_URL = (
+    "postgresql://admin:supersecretpassword@localhost/TodoApplicationDatabase"
+)
 
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={
-        "check_same_thread": False,
-    },
+    DATABASE_URL,
 )
 
 SessionLocal = sessionmaker(
@@ -20,3 +21,14 @@ SessionLocal = sessionmaker(
 
 class Base(DeclarativeBase):
     pass
+
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+db_dependency = Annotated[Session, Depends(get_db)]

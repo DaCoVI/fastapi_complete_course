@@ -10,3 +10,4 @@ class TodoRequest(BaseModel):
 
 class TodoRead(TodoRequest):
     id: int
+    owner_id: int
