@@ -20,14 +20,14 @@ This repository serves as a hands-on learning project for FastAPI, including pra
 
 ### Project 3
 
-- SQL Database and ORM
-- Authentication JWT
+- SQL Database(sqlite3 and PostgreSQL) and ORM
+- Authentication with JWT
 - Routing
-- Hashing Passwords
+- Hashing Passwords with bcrypt
 
 ### Project 3.5
 
-- Database and Data Migration
+- Database and Data Migration with Alembic
 
 ### Project 4
 
