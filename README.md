@@ -3,6 +3,7 @@
 ## Credits
 
 This project is based on the Udemy course [`FastAPI - The Complete Course 2026 (Beginner + Advanced)`](https://www.udemy.com/course/fastapi-the-complete-course/) by Eric Roby and Chad Darby. Full credit goes to them for the course content and guidance.
+[Instructor’s Original Repository](https://github.com/codingwithroby/FastAPI-The-Complete-Course)
 
 ## Purpose
 
