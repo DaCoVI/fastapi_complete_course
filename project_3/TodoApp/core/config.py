@@ -6,3 +6,4 @@ ACCESS_TOKEN_EXPIRE_MINUTES = timedelta(minutes=20)
 DATABASE_URL = (
     "postgresql://admin:supersecretpassword@localhost/TodoApplicationDatabase"
 )
+PASSWORD_MIN_LEN = 8

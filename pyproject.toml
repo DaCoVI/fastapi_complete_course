@@ -20,3 +20,15 @@ disallow_untyped_defs = true
 disallow_untyped_calls = true
 files = ["project_1", "project_2", "project_3", "project_4", "project_5"]
 explicit_package_bases = true
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = [
+    "project_3/TodoApp/test"]
+markers = [
+    "unit: fast, isolated unit tests",
+    "api: API / integration tests",
+    "db: tests that touch the database",
+    "slow: slow-running tests",
+]
+addopts = ["--strict-markers", "-ra", "--tb=auto"]

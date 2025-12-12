@@ -13,4 +13,4 @@ class Users(Base):
     hashed_password: Mapped[str] = mapped_column(String)
     role: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    phone_number: Mapped[str] = mapped_column(String, unique=True)
+    phone_number: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
