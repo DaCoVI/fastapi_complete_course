@@ -1,20 +1,16 @@
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from project_3.TodoApp.core.errors.http import TodoNotFound
 from project_3.TodoApp.schemas import todos_schema
 from project_3.TodoApp.models.todos_orm import Todos
 from project_3.TodoApp.database import db_dependency
 from project_3.TodoApp.core.security import user_dependency
-from fastapi import status
+
 
 router = APIRouter(tags=["todo"])
 
 
 @router.get("/", response_model=list[todos_schema.TodoRead], status_code=200)
 async def read_all(user: user_dependency, db: db_dependency) -> list[Todos]:
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication Failed",
-        )
     return db.query(Todos).filter(Todos.owner_id == user.get("id")).all()
 
 
@@ -24,11 +20,6 @@ async def read_todo(
     db: db_dependency,
     todo_id: int = Path(gt=0),
 ) -> Todos:
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication Failed",
-        )
     todo_model = (
         db.query(Todos)
         .filter(Todos.id == todo_id)
@@ -37,7 +28,7 @@ async def read_todo(
     )
     if todo_model:
         return todo_model
-    raise HTTPException(status_code=404, detail="Todo not found")
+    raise TodoNotFound()
 
 
 @router.post("/todo", status_code=201)
@@ -46,11 +37,6 @@ async def create_todo(
     db: db_dependency,
     todo_request: todos_schema.TodoRequest,
 ) -> None:
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication Failed",
-        )
     todo_model = Todos(**todo_request.model_dump(), owner_id=user.get("id"))
     db.add(todo_model)
     db.commit()
@@ -63,11 +49,6 @@ async def update_todo(
     todo_request: todos_schema.TodoRequest,
     todo_id: int = Path(gt=0),
 ) -> None:
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication Failed",
-        )
     todo = (
         db.query(Todos)
         .filter(Todos.id == todo_id)
@@ -75,7 +56,7 @@ async def update_todo(
         .first()
     )
     if not todo:
-        raise HTTPException(status_code=404, detail="Todo not found")
+        raise TodoNotFound()
     todo.title = todo_request.title
     todo.description = todo_request.description
     todo.priority = todo_request.priority
@@ -90,11 +71,6 @@ async def delete_todo(
     db: db_dependency,
     todo_id: int = Path(gt=0),
 ) -> None:
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication Failed",
-        )
     todo = (
         db.query(Todos)
         .filter(Todos.id == todo_id)
@@ -102,7 +78,7 @@ async def delete_todo(
         .first()
     )
     if not todo:
-        raise HTTPException(status_code=404, detail="Todo not found")
+        raise TodoNotFound()
     db.query(Todos).filter(Todos.id == todo_id).filter(
         Todos.owner_id == user.get("id")
     ).delete()

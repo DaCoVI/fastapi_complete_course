@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Connection, NestedTransaction, RootTransaction, event
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.session import SessionTransaction
-from typing import Generator
+from typing import Callable, Generator
 import pytest
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.pool import StaticPool
@@ -15,6 +15,7 @@ from project_3.TodoApp.enum.roles import UserRole
 from project_3.TodoApp.main import app
 
 DATABASE_URL = "sqlite+pysqlite:///:memory:"
+AuthAs = Callable[[int, UserRole | str, str], None]
 
 
 @pytest.fixture(scope="session")
@@ -88,4 +89,21 @@ def auth_admin() -> Generator[None, None, None]:
 
     app.dependency_overrides[get_current_user] = override
     yield
+    app.dependency_overrides.pop(get_current_user, None)
+
+
+@pytest.fixture
+def auth_as() -> Generator[AuthAs, None, None]:
+    def auth(
+        user_id: int,
+        role: UserRole | str = UserRole.USER,
+        username: str = "testuser",
+    ) -> None:
+        def override() -> JwtUserClaims:
+            return {"username": username, "id": user_id, "role": role}
+
+        app.dependency_overrides[get_current_user] = override
+
+    yield auth
+
     app.dependency_overrides.pop(get_current_user, None)

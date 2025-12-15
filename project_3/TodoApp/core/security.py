@@ -1,42 +1,40 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, TypedDict
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import status
+
 
 from project_3.TodoApp.core.config import ALGORITHM, SECRET_KEY
+from project_3.TodoApp.core.errors.http import AuthInvalid, AuthRequired
 from project_3.TodoApp.enum.roles import UserRole
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token", auto_error=False)
 
 
 class JwtUserClaims(TypedDict):
     username: str
     id: int
-    role: UserRole
+    role: UserRole | str
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_bearer)],
+    token: Annotated[str | None, Depends(oauth2_bearer)],
 ) -> JwtUserClaims:
     try:
+        if token is None:
+            raise AuthRequired()
         payload = jwt.decode(token, key=SECRET_KEY, algorithms=ALGORITHM)
         username: str | None = payload.get("sub")
         id: int | None = payload.get("id")
         role: UserRole | None = payload.get("role")
         if not username or not id or not role:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate user.",
-            )
+            raise AuthInvalid()
         return {"username": username, "id": id, "role": role}
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user."
-        )
+        raise AuthInvalid()
 
 
 user_dependency = Annotated[JwtUserClaims, Depends(get_current_user)]

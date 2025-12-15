@@ -23,12 +23,10 @@ explicit_package_bases = true
 
 [tool.pytest.ini_options]
 minversion = "9.0"
-testpaths = [
-    "project_3/TodoApp/test"]
+testpaths = ["project_3/TodoApp/test"]
 markers = [
     "unit: fast, isolated unit tests",
     "api: API / integration tests",
     "db: tests that touch the database",
-    "slow: slow-running tests",
 ]
 addopts = ["--strict-markers", "-ra", "--tb=auto"]
