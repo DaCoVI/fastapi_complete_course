@@ -9,7 +9,7 @@ from project_3.TodoApp.test.api.conftest import AuthAs
 from project_3.TodoApp.test.api.factories import make_todo, make_user
 
 
-pytestmark = pytest.mark.api
+pytestmark = [pytest.mark.api, pytest.mark.router_todos]
 
 # =====================================================================================
 # Endpoint: read_all()

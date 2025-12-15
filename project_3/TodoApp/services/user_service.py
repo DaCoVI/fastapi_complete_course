@@ -1,8 +1,7 @@
-from fastapi import HTTPException
+from project_3.TodoApp.core.errors.http import AuthInvalid
 from project_3.TodoApp.models.users_orm import Users
 from sqlalchemy.orm import Session
 from project_3.TodoApp.core.security import bcrypt_context
-from fastapi import status
 
 
 class UserService:
@@ -10,26 +9,23 @@ class UserService:
     def get_user_by_id(db: Session, user_id: int) -> Users:
         user = db.query(Users).filter(Users.id == user_id).first()
         if not user:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+            raise AuthInvalid()
         return user
 
     @staticmethod
     def authenticate(username: str, password: str, db: Session) -> Users:
         user = db.query(Users).filter(Users.username == username).first()
         if not user:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+            raise AuthInvalid()
         if not bcrypt_context.verify(password, user.hashed_password):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+            raise AuthInvalid()
         return user
 
     @staticmethod
     def change_password(db: Session, user_id: int, old: str, new: str) -> None:
         user = UserService.get_user_by_id(db, user_id)
         if not bcrypt_context.verify(old, user.hashed_password):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Old password incorrect",
-            )
+            raise AuthInvalid()
         user.hashed_password = bcrypt_context.hash(new)
         db.commit()
 
@@ -39,10 +35,7 @@ class UserService:
     ) -> None:
         user = UserService.get_user_by_id(db, user_id)
         if not bcrypt_context.verify(password, user.hashed_password):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Password incorrect",
-            )
+            raise AuthInvalid()
 
         user.phone_number = new_phone
         db.commit()

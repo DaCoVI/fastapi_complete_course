@@ -28,5 +28,9 @@ markers = [
     "unit: fast, isolated unit tests",
     "api: API / integration tests",
     "db: tests that touch the database",
+    "router_users: API tests for users router",
+    "router_todos: API tests for todo router",
+    "router_admin: API tests for admin router",
+    "router_auth: API tests for auth router",
 ]
 addopts = ["--strict-markers", "-ra", "--tb=auto"]

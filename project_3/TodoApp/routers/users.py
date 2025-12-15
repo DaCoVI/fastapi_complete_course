@@ -14,7 +14,7 @@ from project_3.TodoApp.services.user_service import UserService
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.get("/", response_model=UserRead)
+@router.get("/", response_model=UserRead, status_code=status.HTTP_200_OK)
 async def get_user(user: user_dependency, db: db_dependency) -> Users:
     return UserService.get_user_by_id(db, user["id"])
 
