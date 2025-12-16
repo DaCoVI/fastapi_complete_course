@@ -1,8 +1,6 @@
-fastapi
 types-passlib
 pytest
 pytest-asyncio
-jinja2
 alembic
 types-python-jose
 trio
