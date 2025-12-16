@@ -11,6 +11,9 @@ This repository serves as a hands-on learning project for FastAPI, including pra
 
 ## Content
 
+Instead of following the course structure one-to-one, the implementations in `Project 3` were adapted based on my own experience.  
+In particular, the project structure and testing strategy differ from the course in order to better reflect best practices.
+
 ### Project 1
 
 - Get/Post/Put/Delete and more
@@ -29,12 +32,9 @@ This repository serves as a hands-on learning project for FastAPI, including pra
 ### Project 3.5
 
 - Database and Data Migration with Alembic
+- Implemented in Project 3
 
 ### Project 4
 
-- Unit and Intergration testing
-
-### Project 5
-
-- Git/GitHub Setup
-- Deployment
+- API testing with pytest
+- Implemented in Project 3
